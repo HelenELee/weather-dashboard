@@ -1,0 +1,74 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Weather Dashboard</title>
+
+
+  <!--Add Google Fonts-->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <!--Add jQuery links-->
+ <link
+   rel="stylesheet"
+   href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+ />
+ <!--Add my stylesheet-->
+
+  <link rel="stylesheet" href="./assets/css/reset.css" />
+  <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
+<body>
+<!--nav contains link to high score and timer-->
+    <header class="header-class">
+        <nav > 
+            <h1>Weather Dashboard</h1>
+        </nav>
+    </header>
+
+
+  <main>
+    <div class="main-container" id="main-container">
+            
+              <div class="left-column" id="left-column">
+                <form class="search-form">
+                  <label for="city-name"><h2>Search for a city:</h2></label>
+                  <input type="text" class="" id="city-name" placeholder="Enter city">  
+                  
+                  <button type="submit" value="submit" class="main-button" id="main-button">Submit</button>
+                  <div id="new-buttons">
+                    
+                  </div>
+                  <!--<button type="submit" value="submit" class="clear-button" id="clear-button">Clear Previous Searches</button> -->
+                </form>
+                
+              </div>
+              <div class="right-column" id="right-column">
+                <!--Right hand column-->
+                <section class="city-details" id="city-details">
+                                      
+                </section>
+                <h2>5 Day Forcast:</h2>
+                <div class="weather-container" id="weather-container">
+                                      
+                </div>
+              </div>
+            
+    </div>
+  </main>
+  <!--Include Day.js-->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
+    integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U="
+      crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <!-- jQuery UI <script> tag -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="./assets/js/script.js"></script>
+  <script src="https://kit.fontawesome.com/b3cf47db47.js" crossorigin="anonymous"></script>
+</body>
+</html>
