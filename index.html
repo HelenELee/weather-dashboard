@@ -5,7 +5,6 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Weather Dashboard</title>
 
-
   <!--Add Google Fonts-->
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +22,6 @@
   <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body>
-<!--nav contains link to high score and timer-->
     <header class="header-class">
         <nav > 
             <h1>Weather Dashboard</h1>
@@ -35,6 +33,7 @@
     <div class="main-container" id="main-container">
             
               <div class="left-column" id="left-column">
+                <!--Input form-->
                 <form class="search-form">
                   <label for="city-name"><h2>Search for a city:</h2></label>
                   <input type="text" class="" id="city-name" placeholder="Enter city">  
@@ -50,11 +49,11 @@
               <div class="right-column" id="right-column">
                 <!--Right hand column-->
                 <section class="city-details" id="city-details">
-                                      
+                <!--Todays weather-->                 
                 </section>
                 <h2>5 Day Forcast:</h2>
                 <div class="weather-container" id="weather-container">
-                                      
+                <!--weather cards for 5 days-->                  
                 </div>
               </div>
             
@@ -69,6 +68,6 @@
   <!-- jQuery UI <script> tag -->
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="./assets/js/script.js"></script>
-  <script src="https://kit.fontawesome.com/b3cf47db47.js" crossorigin="anonymous"></script>
+  
 </body>
 </html>
