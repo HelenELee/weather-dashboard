@@ -1,95 +1,91 @@
-//var requestUrl = 'https://api.github.com/repos/twitter/Chill/issues?per_page=5';
+//get access to main elements
 const API_KEY = '81348d0b3ffba2f05730148b0118da15';
 let submitEl = document.getElementById("main-button");
-let clearButtonEl = document.getElementById("clear-button");
+//let clearButtonEl = document.getElementById("clear-button");
 let newButtonsEL = document.getElementById("new-buttons");
-var cityDetailsEL = document.getElementById("city-details");
+let cityDetailsEL = document.getElementById("city-details");
 let weatherContainerEL = document.getElementById("weather-container");
 
-//var requestUrl_weather = 'https://api.openweathermap.org/data/2.5/forecast?lat=-31.9558964&lon=115.8605801&appid=81348d0b3ffba2f05730148b0118da15&units=metric&exclude=current,minutely,hourly,alerts';
-
+//get weather details
 function callAPI(cityValue){
-    
-    let city_name = (cityValue != null) ? cityValue : $('#city-name').val();
-    //let country_name = (countryValue != null) ? countryValue : $('#country-name').val();
-    //let combined = (country_name != '') ? city_name + "," + country_name : city_name;
-    
+    //set city_name - this function may be called by entering city name in input field (get value from field)
+    //or may be called by clickng a previous search button (city value passed as parameter)
+    let city_name = (cityValue != null) ? cityValue : $('#city-name').val();   
+    //only return one value in API search
     let limit = "1";
     let lat ='';
     let lon = '';
-    //let requestUrl_LatLon = `http://api.openweathermap.org/geo/1.0/direct?q=${city_name},${country_code}&limit=${limit}&appid=${API_KEY}`;
+    //create API url by plugging in values to javascript template literal
     let requestUrl_LatLon = `http://api.openweathermap.org/geo/1.0/direct?q=${city_name}&limit=${limit}&appid=${API_KEY}`;
     
-    console.log("LATLON = " + requestUrl_LatLon);
+    //console.log("LATLON = " + requestUrl_LatLon);
 
-    fetch(requestUrl_LatLon)
+    fetch(requestUrl_LatLon) // call API to get lat and lon
         .then(function (response) {
+            //convert to JSON
             return response.json();
         })
         .then(function (data) {
-          //  console.log(data);
-
-            if (data.length > 0) {
+             if (data.length > 0) {
                 lat = data[0].lat;
                 lon = data[0].lon;
-              //  console.log('lat = ' + lat);
-             //   console.log('lon = ' + lon);
+                //create API url by plugging in lat/lon to javascript template literal
                 var requestUrl_Weather = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=81348d0b3ffba2f05730148b0118da15&units=metric&exclude=current,minutely,hourly,alerts`;
-                console.log("WEATHER = " + requestUrl_Weather);
+                //console.log("WEATHER = " + requestUrl_Weather);
             }
-            return fetch(requestUrl_Weather);
+            return fetch(requestUrl_Weather); //call API
             
         })
         .then(function(response) {
-            //let data = response.json();
-            //console.log(data);
+            //convert to JSON
             return response.json();
         })
         .then(function(data) {
-            console.log(data);
+            //console.log(data);
+            //display values retrieved from APIs
             displayWeather(city_name, data.list);
         })
-        //.catch(error => {
-        //    throw(error);
-        //}
         .catch(function(error){
+            //no city found, tell user
             alert("City was not found. Please try again.");
+            //remove "previous search" button
             removeButton(city_name.toProperCase());
-            //throw(error);
         }
         );
 
 }
 
 function displayWeather(cityValue, weatherList) {
-    
+    //set up dates
     let startDay = dayjs().set('hour', 12).set('minute', 59).set('second', 59).unix();
-   // console.log("formatted startDay- " +dayjs.unix(startDay).format('MMM D, YYYY, hh:mm:ss a'));
     let tomorrowDay = dayjs().add(1, 'day').unix();
-    //console.log("formatted tomorrowDay- " +dayjs.unix(tomorrowDay).format('MMM D, YYYY, hh:mm:ss a'));
     let endDay = dayjs().add(6, 'day').unix();
-    //console.log("formatted endDay- " +dayjs.unix(endDay).format('MMM D, YYYY, hh:mm:ss a'));
     let displayedTodays = false;
-    
+    //remove previous values
     removeAllChildren(weatherContainerEL);
 
-    for (var i = 0; i < weatherList.length; i++) {
-        //console.log("current date" + weatherList[i].dt.format('MMM D, YYYY, hh:mm:ss a'));
-        
+    //loop through all values returned from API call
+    for (var i = 0; i < weatherList.length; i++) {        
         console.log("Processing : "+ dayjs.unix(weatherList[i].dt).format('MMM D, YYYY, hh:mm:ss a') + " / " + weatherList[i].main.temp);
+        //check values are in correct date range
         if (weatherList[i].dt < tomorrowDay && !displayedTodays) {
+            //found todays weather details so print
             createTodaysWeather(cityValue, weatherList[i]);
+            //set boolean to true so you dont print todays details again
             displayedTodays = true;
         }else if (weatherList[i].dt > startDay && weatherList[i].dt <= endDay) {
+            //details within date range
             if (weatherList[i].dt_txt.slice(11, 13) == "09") {
+                //return the same time slot value for each day
+                //create 5 weather forcasts
                 createWeatherCard(weatherList[i]);
             }
         }
         
-      }
-      
+      } 
 }
 
+//helper function to remove children elements
 function removeAllChildren(elem){
     while (elem.lastElementChild) {
         elem.removeChild(elem.lastElementChild);
@@ -97,44 +93,40 @@ function removeAllChildren(elem){
 }
 
 function createTodaysWeather(cityValue, weatherObj) {
-   
-    //console.log("createTodaysWeather");
-
+   //remove previous results
     removeAllChildren(cityDetailsEL);
-    
-    let thisDay = dayjs.unix(weatherObj.dt).format('MMM D, YYYY');
+    //get icon details
     let iconcode = weatherObj.weather[0].icon;
     let iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
-
+    //add city and date
+    let thisDay = dayjs.unix(weatherObj.dt).format('MMM D, YYYY');
     
     let cityName = document.createElement("h2");
-    //cityName.setAttribute("display", "inline");
     cityName.appendChild(document.createTextNode(cityValue.toProperCase() + " (" + thisDay + ")"));
     cityDetailsEL.appendChild(cityName);
+    //add image
     let imgValue = document.createElement("img");
     imgValue.setAttribute("src", iconurl);
-    //imgValue.setAttribute("display", "inline");
     cityDetailsEL.appendChild(imgValue);
+    //add temp
     let temp = document.createElement("h3");
     temp.appendChild(document.createTextNode("Temp: " + weatherObj.main.temp));
-    
-
     cityDetailsEL.appendChild(temp);
-    
+    //add wind speed
     let wind = document.createElement("h3");
     wind.appendChild(document.createTextNode("Wind: " + weatherObj.wind.speed));
     cityDetailsEL.appendChild(wind);
-
+    //add humidity
     let humidity = document.createElement("h3");
     humidity.appendChild(document.createTextNode("Humidity: " + weatherObj.main.humidity));
     cityDetailsEL.appendChild(humidity);
 
 }
 
-function createWeatherCard(weatherObj) {
-    console.log("inside createWeatherCard");
-    //removeAllChildren(weatherContainerEL);
-   // for (let i = 0; i< 5; i++){
+function createWeatherCard(weatherObj) { 
+    //create 1 weather forcast
+    
+    //create elements and add relevent details
     let weatherCard = document.createElement("div");
     weatherCard.classList.add("weather-card");
     let dateValue = document.createElement("h2");
@@ -146,7 +138,7 @@ function createWeatherCard(weatherObj) {
     let thisDay = dayjs.unix(weatherObj.dt).format('MMM D, YYYY');
    
     dateValue.appendChild(document.createTextNode(thisDay));
-
+    //get icon details
     let iconcode = weatherObj.weather[0].icon;
     let iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
     imgValue.setAttribute("src", iconurl);
@@ -161,12 +153,11 @@ function createWeatherCard(weatherObj) {
     weatherCard.appendChild(wind);
     weatherCard.appendChild(humidity);
 
-    weatherContainerEL.appendChild(weatherCard);
-    //}
-    
+    weatherContainerEL.appendChild(weatherCard);    
 }
 
 function validateFields(fieldName){
+    //check value was added to field 
     let fieldValue = $("#" + fieldName).val();
     if (fieldValue === "") {
         return false;
@@ -174,6 +165,7 @@ function validateFields(fieldName){
     return true;
 }
 
+//helper function to convert text to propercase
 String.prototype.toProperCase = function () {
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
@@ -182,127 +174,117 @@ function saveNewCity(cityValue){
     
     //get array of stored cities
     var storedCities = JSON.parse(localStorage.getItem("cities"));
-    console.log("proper case = " + cityValue.toProperCase());
+  
     //create object from current city
     var currentCity = {
     city: cityValue.toProperCase()
-    
    }  
   
    //check if this is the first city we are saving
    if (storedCities == null){
      storedCities = [currentCity];
    } else {
-    //already have saved scores so push current onto array
+    //already have saved city so push current onto array
      storedCities.push(currentCity) ;
      
   }
    //save all cities to local storage again - including current city
+   //convert to text before storing
    localStorage.setItem("cities", JSON.stringify(storedCities));
    
 }
 
+//helper function to check whats in storage
 function printStorage() {
     var storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities != null) {
-        console.log("***** Storage *******");
+        //console.log("***** Storage *******");
         for (let i=0; i<storedCities.length; i++){
             console.log(storedCities[i].city  );
         }
     }
 }
 
+//create button with previous search details - quick way to call search again
 function createNewButton(cityValue) {
     var newButton = document.createElement("button");
     newButton.appendChild(document.createTextNode(cityValue.toProperCase() ));
     newButton.setAttribute("class", "previous-search");
     newButton.setAttribute("data-city", cityValue.toProperCase());
-   // newButton.setAttribute("data-country", countryValue);
     newButtonsEL.appendChild(newButton); 
-    
 }
 
+//helper function - remove button if details not found in API
 function removeButton(cityValue) {
     let buttonSelector = `[data-city="${cityValue}"]`;
-    console.log(buttonSelector);
+    //console.log(buttonSelector);
     $(buttonSelector).remove()
-    
-
 }
-
+//create button based on stored value
 function createAllButtons() {
     var storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities != null) {
-        console.log("***** Storage *******");
+        //console.log("***** Storage *******");
         for (let i=0; i<storedCities.length; i++){
-            //console.log(storedCities[i].city + "/" + storedCities[i].country );
             createNewButton(storedCities[i].city);
         }
     }
 }
-
+//check if city value is in storage or not
 function inStorage(cityValue) {
-   // alert('Check storage');
     var storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities == null) {
-        console.log("storage empty");
         return false;
     }
 
     for (let i=0; i<storedCities.length; i++){
         if (storedCities[i].city === cityValue.toProperCase() ) {
-            console.log("found city in storage");
             return true;
         } 
     }
-    console.log("NOT in storage");
     return false;
 }
-
+//function called when submit button clicked
 function submitButtonHandler (event){
-   // alert('submit button handler');
     event.preventDefault();
     let cityValue = $("#city-name").val();
-   // let countryValue = $("#country-name").val();
+   
     if (validateFields("city-name")) {
-       // alert('check storage');
-       
+       //check if its already in storage - dont add again if  it is
         if (!inStorage(cityValue)) {
             createNewButton(cityValue);
             saveNewCity(cityValue);
         }
         callAPI();
-       // printStorage();
+       
         $('#city-name').val("");
-       // $('#country-name').val("");
     } else {
+        // no city added - tell user
         alert("Please enter a city name.");
     }
 }
 
-  //clear all values 
+  //helper function - clear values from storage 
   function clearStorageHandler(event) {
-    console.log('clear storage');
     event.preventDefault();
-    localStorage.clear("cities");
-    //reprint values to screen
-    
+    localStorage.clear("cities");    
   }
 
+//called when any "previous" search button is clicked
 function allButtonsHandler(event) {
     event.preventDefault();
     
     let currentButton = event.target;
+    //find out which city was clicked
     let cityValue = currentButton.getAttribute("data-city");
-   // let countryValue = currentButton.getAttribute("data-country")
-    console.log("allButtonsHandler" + " / " + cityValue);
+    //call API again with the value
     callAPI(cityValue);
 }
 
 submitEl.addEventListener('click', submitButtonHandler);
 newButtonsEL.addEventListener('click', allButtonsHandler);
-//clearButtonEl.addEventListener('click', clearStorageHandler);
 
+//prived auto complete for australian cities
 // Autocomplete widget
 $(function () {
     var cityNames = [
@@ -320,12 +302,12 @@ $(function () {
   });
 
   //localStorage.clear();
-    printStorage();
+   // printStorage();
 
   createAllButtons();
 
   //removeButton('Xxx');
-  localStorage.clear("cities");
+  //localStorage.clear("cities");
 
   
  
