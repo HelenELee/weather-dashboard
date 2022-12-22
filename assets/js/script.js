@@ -66,7 +66,7 @@ function displayWeather(cityValue, weatherList) {
 
     //loop through all values returned from API call
     for (var i = 0; i < weatherList.length; i++) {        
-        console.log("Processing : "+ dayjs.unix(weatherList[i].dt).format('MMM D, YYYY, hh:mm:ss a') + " / " + weatherList[i].main.temp);
+        //console.log("Processing : "+ dayjs.unix(weatherList[i].dt).format('MMM D, YYYY, hh:mm:ss a') + " / " + weatherList[i].main.temp);
         //check values are in correct date range
         if (weatherList[i].dt < tomorrowDay && !displayedTodays) {
             //found todays weather details so print
@@ -198,7 +198,6 @@ function saveNewCity(cityValue){
 function printStorage() {
     var storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities != null) {
-        //console.log("***** Storage *******");
         for (let i=0; i<storedCities.length; i++){
             console.log(storedCities[i].city  );
         }
@@ -217,14 +216,13 @@ function createNewButton(cityValue) {
 //helper function - remove button if details not found in API
 function removeButton(cityValue) {
     let buttonSelector = `[data-city="${cityValue}"]`;
-    //console.log(buttonSelector);
+   
     $(buttonSelector).remove()
 }
 //create button based on stored value
 function createAllButtons() {
     var storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities != null) {
-        //console.log("***** Storage *******");
         for (let i=0; i<storedCities.length; i++){
             createNewButton(storedCities[i].city);
         }
@@ -301,13 +299,9 @@ $(function () {
     });
   });
 
-  //localStorage.clear();
-   // printStorage();
 
   createAllButtons();
 
-  //removeButton('Xxx');
-  //localStorage.clear("cities");
 
   
  
