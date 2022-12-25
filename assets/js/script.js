@@ -5,6 +5,9 @@ let submitEl = document.getElementById("main-button");
 let newButtonsEL = document.getElementById("new-buttons");
 let cityDetailsEL = document.getElementById("city-details");
 let weatherContainerEL = document.getElementById("weather-container");
+//let tempValue = `Temp: ${temp_value} C`;
+//let windValue = `Wind: ${wind_value} MPH`;
+//let humidityValue = `Humidity: ${humid_value} %`;
 
 //get weather details
 function callAPI(cityValue){
@@ -65,7 +68,7 @@ function displayWeather(cityValue, weatherList) {
     removeAllChildren(weatherContainerEL);
 
     //loop through all values returned from API call
-    for (var i = 0; i < weatherList.length; i++) {        
+    for (let i = 0; i < weatherList.length; i++) {        
         //console.log("Processing : "+ dayjs.unix(weatherList[i].dt).format('MMM D, YYYY, hh:mm:ss a') + " / " + weatherList[i].main.temp);
         //check values are in correct date range
         if (weatherList[i].dt < tomorrowDay && !displayedTodays) {
@@ -110,15 +113,15 @@ function createTodaysWeather(cityValue, weatherObj) {
     cityDetailsEL.appendChild(imgValue);
     //add temp
     let temp = document.createElement("h3");
-    temp.appendChild(document.createTextNode("Temp: " + weatherObj.main.temp));
+    temp.appendChild(document.createTextNode("Temp: " + weatherObj.main.temp + " °C"));
     cityDetailsEL.appendChild(temp);
     //add wind speed
     let wind = document.createElement("h3");
-    wind.appendChild(document.createTextNode("Wind: " + weatherObj.wind.speed));
+    wind.appendChild(document.createTextNode("Wind: " + weatherObj.wind.speed + " MPH"));
     cityDetailsEL.appendChild(wind);
     //add humidity
     let humidity = document.createElement("h3");
-    humidity.appendChild(document.createTextNode("Humidity: " + weatherObj.main.humidity));
+    humidity.appendChild(document.createTextNode("Humidity: " + weatherObj.main.humidity + " %"));
     cityDetailsEL.appendChild(humidity);
 
 }
@@ -143,9 +146,9 @@ function createWeatherCard(weatherObj) {
     let iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
     imgValue.setAttribute("src", iconurl);
 
-    temp.appendChild(document.createTextNode("Temp: " + weatherObj.main.temp));
-    wind.appendChild(document.createTextNode("Wind: " + weatherObj.wind.speed));
-    humidity.appendChild(document.createTextNode("Humidity: " + weatherObj.main.humidity));
+    temp.appendChild(document.createTextNode("Temp: " + weatherObj.main.temp + " °C"));
+    wind.appendChild(document.createTextNode("Wind: " + weatherObj.wind.speed + " MPH"));
+    humidity.appendChild(document.createTextNode("Humidity: " + weatherObj.main.humidity + " %"));
 
     weatherCard.appendChild(dateValue);
     weatherCard.appendChild(imgValue);
@@ -196,7 +199,7 @@ function saveNewCity(cityValue){
 
 //helper function to check whats in storage
 function printStorage() {
-    var storedCities = JSON.parse(localStorage.getItem("cities"));
+    let storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities != null) {
         for (let i=0; i<storedCities.length; i++){
             console.log(storedCities[i].city  );
@@ -206,7 +209,7 @@ function printStorage() {
 
 //create button with previous search details - quick way to call search again
 function createNewButton(cityValue) {
-    var newButton = document.createElement("button");
+    let newButton = document.createElement("button");
     newButton.appendChild(document.createTextNode(cityValue.toProperCase() ));
     newButton.setAttribute("class", "previous-search");
     newButton.setAttribute("data-city", cityValue.toProperCase());
@@ -221,7 +224,7 @@ function removeButton(cityValue) {
 }
 //create button based on stored value
 function createAllButtons() {
-    var storedCities = JSON.parse(localStorage.getItem("cities"));
+    let storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities != null) {
         for (let i=0; i<storedCities.length; i++){
             createNewButton(storedCities[i].city);
@@ -230,7 +233,7 @@ function createAllButtons() {
 }
 //check if city value is in storage or not
 function inStorage(cityValue) {
-    var storedCities = JSON.parse(localStorage.getItem("cities"));
+    let storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities == null) {
         return false;
     }
@@ -285,7 +288,7 @@ newButtonsEL.addEventListener('click', allButtonsHandler);
 //prived auto complete for australian cities
 // Autocomplete widget
 $(function () {
-    var cityNames = [
+    let cityNames = [
       'Perth',
       'Sydney',
       'Melbourne',
