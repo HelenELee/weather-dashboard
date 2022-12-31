@@ -220,7 +220,22 @@ function createNewButton(cityValue) {
 function removeButton(cityValue) {
     let buttonSelector = `[data-city="${cityValue}"]`;
    
-    $(buttonSelector).remove()
+    $(buttonSelector).remove();
+    //console.log("the value=" + cityValue+ "=");
+    if (inStorage(cityValue)){
+       // console.log("found in storage");
+        let storedCities = JSON.parse(localStorage.getItem("cities"));
+        
+       // for (let data of storedCities) {
+       //     console.log(data);
+       // }
+        storedCities = storedCities.filter(function(item) {
+            return item.city !== cityValue
+        })
+
+        localStorage.setItem("cities", JSON.stringify(storedCities));
+    }
+    
 }
 //create buttons based on stored value
 function createAllButtons() {
@@ -304,7 +319,7 @@ $(function () {
 
 
   createAllButtons();
-
+  //localStorage.clear("cities"); 
 
   
  
