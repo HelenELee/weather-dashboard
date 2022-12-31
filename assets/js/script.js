@@ -222,7 +222,7 @@ function removeButton(cityValue) {
    
     $(buttonSelector).remove()
 }
-//create button based on stored value
+//create buttons based on stored value
 function createAllButtons() {
     let storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities != null) {
@@ -285,8 +285,8 @@ function allButtonsHandler(event) {
 submitEl.addEventListener('click', submitButtonHandler);
 newButtonsEL.addEventListener('click', allButtonsHandler);
 
-//prived auto complete for australian cities
-// Autocomplete widget
+//auto complete for australian cities
+
 $(function () {
     let cityNames = [
       'Perth',
