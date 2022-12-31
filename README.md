@@ -46,7 +46,7 @@ Below is a screenshot of the webpage.
 
 
 
-[To view the work day scheduler webpage click here.](https://helenelee.github.io/weather-dashboard/)
+[To view the weather dashboard webpage click here.](https://helenelee.github.io/weather-dashboard/)
 
 
 ## Credits
