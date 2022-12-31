@@ -5,9 +5,7 @@ let submitEl = document.getElementById("main-button");
 let newButtonsEL = document.getElementById("new-buttons");
 let cityDetailsEL = document.getElementById("city-details");
 let weatherContainerEL = document.getElementById("weather-container");
-//let tempValue = `Temp: ${temp_value} C`;
-//let windValue = `Wind: ${wind_value} MPH`;
-//let humidityValue = `Humidity: ${humid_value} %`;
+
 
 //get weather details
 function callAPI(cityValue){
@@ -60,9 +58,30 @@ function callAPI(cityValue){
 
 function displayWeather(cityValue, weatherList) {
     //set up dates
-    let startDay = dayjs().set('hour', 12).set('minute', 59).set('second', 59).unix();
+    //let startDay = dayjs().set('hour', 12).set('minute', 59).set('second', 59).unix();
+    
+    let startDay = new Date();
+    startDay = dayjs(startDay).unix();
+   // console.log(startDay);
+    
+    console.log(startDay);
+
     let tomorrowDay = dayjs().add(1, 'day').unix();
+    /*
+    let tomorrowDay = new Date();
+    tomorrowDay.setDate(startDay.getDate() + 1)
+    tomorrowDay = day.js(tomorrowDay).unix();
+    console.log(tomorrowDay);
+    */
+
     let endDay = dayjs().add(6, 'day').unix();
+    /*
+    let endDay = new Date();
+    endDay.setDate(startDay.getDay() + 6);
+    endDay = day.js(endDay).unix();
+    console.log(endDay);
+    */
+
     let displayedTodays = false;
     //remove previous values
     removeAllChildren(weatherContainerEL);
@@ -160,7 +179,7 @@ function createWeatherCard(weatherObj) {
 }
 
 function validateFields(fieldName){
-    //check value was added to field 
+    //check value was entered in field 
     let fieldValue = $("#" + fieldName).val();
     if (fieldValue === "") {
         return false;
@@ -173,6 +192,7 @@ String.prototype.toProperCase = function () {
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
 
+//save detail to local storage
 function saveNewCity(cityValue){
     
     //get array of stored cities
@@ -217,6 +237,7 @@ function createNewButton(cityValue) {
 }
 
 //helper function - remove button if details not found in API
+//also remove from local storage
 function removeButton(cityValue) {
     let buttonSelector = `[data-city="${cityValue}"]`;
    
@@ -225,10 +246,7 @@ function removeButton(cityValue) {
     if (inStorage(cityValue)){
        // console.log("found in storage");
         let storedCities = JSON.parse(localStorage.getItem("cities"));
-        
-       // for (let data of storedCities) {
-       //     console.log(data);
-       // }
+        //remove city from local storage using filter
         storedCities = storedCities.filter(function(item) {
             return item.city !== cityValue
         })
@@ -246,7 +264,7 @@ function createAllButtons() {
         }
     }
 }
-//check if city value is in storage or not
+//helper function - check if city value is in storage or not
 function inStorage(cityValue) {
     let storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities == null) {
@@ -260,6 +278,7 @@ function inStorage(cityValue) {
     }
     return false;
 }
+
 //function called when submit button clicked
 function submitButtonHandler (event){
     event.preventDefault();
@@ -320,6 +339,8 @@ $(function () {
 
   createAllButtons();
   //localStorage.clear("cities"); 
+  //let startDay = new Date();
+  //console.log(startDay);
 
   
  
