@@ -1,4 +1,4 @@
-# Work Day Scheduler
+# Weather Dashboard
 
 ## Description
 The weather dashboard allows users to enter a city name and get a five day weather forecast for that city as well as the current forecast for the city. Weather details are retrieved from http://api.openweathermap.org using an API call.
