@@ -80,7 +80,7 @@ function displayWeather(cityValue, weatherList) {
             //details within date range
             if (weatherList[i].dt_txt.slice(11, 13) == "09") {
                 //return the same time slot value for each day
-                //create 5 weather forcasts
+                //create 5 weather forecasts
                 createWeatherCard(weatherList[i]);
             }
         }
@@ -127,7 +127,7 @@ function createTodaysWeather(cityValue, weatherObj) {
 }
 
 function createWeatherCard(weatherObj) { 
-    //create 1 weather forcast
+    //create 1 weather forecast
     
     //create elements and add relevent details
     let weatherCard = document.createElement("div");
