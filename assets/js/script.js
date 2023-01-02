@@ -17,7 +17,7 @@ function callAPI(cityValue){
     let lat ='';
     let lon = '';
     //create API url by plugging in values to javascript template literal
-    let requestUrl_LatLon = `http://api.openweathermap.org/geo/1.0/direct?q=${city_name}&limit=${limit}&appid=${API_KEY}`;
+    let requestUrl_LatLon = `https://api.openweathermap.org/geo/1.0/direct?q=${city_name}&limit=${limit}&appid=${API_KEY}`;
     
     fetch(requestUrl_LatLon) // call API to get lat and lon
         .then(function (response) {
@@ -118,7 +118,7 @@ function createTodaysWeather(cityValue, weatherObj) {
     removeAllChildren(cityDetailsEL);
     //get icon details
     let iconcode = weatherObj.weather[0].icon;
-    let iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+    let iconurl = "https://openweathermap.org/img/w/" + iconcode + ".png";
     //add city and date
     let thisDay = dayjs.unix(weatherObj.dt).format('MMM D, YYYY');
     
@@ -163,7 +163,7 @@ function createWeatherCard(weatherObj) {
     dateValue.appendChild(document.createTextNode(thisDay));
     //get icon details
     let iconcode = weatherObj.weather[0].icon;
-    let iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+    let iconurl = "https://openweathermap.org/img/w/" + iconcode + ".png";
     imgValue.setAttribute("src", iconurl);
     imgValue.setAttribute("alt", "weather icon");
     //add temp, wind, humidity
@@ -339,7 +339,7 @@ $(function () {
 
 
   createAllButtons();
-  //localStorage.clear("cities"); 
+  localStorage.clear("cities"); 
   //let startDay = new Date();
   //console.log(startDay);
 
