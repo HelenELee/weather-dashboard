@@ -1,7 +1,7 @@
 //get access to main elements
+//key for API call 
 const API_KEY = '81348d0b3ffba2f05730148b0118da15';
 let submitEl = document.getElementById("main-button");
-//let clearButtonEl = document.getElementById("clear-button");
 let newButtonsEL = document.getElementById("new-buttons");
 let cityDetailsEL = document.getElementById("city-details");
 let weatherContainerEL = document.getElementById("weather-container");
@@ -19,8 +19,6 @@ function callAPI(cityValue){
     //create API url by plugging in values to javascript template literal
     let requestUrl_LatLon = `http://api.openweathermap.org/geo/1.0/direct?q=${city_name}&limit=${limit}&appid=${API_KEY}`;
     
-    //console.log("LATLON = " + requestUrl_LatLon);
-
     fetch(requestUrl_LatLon) // call API to get lat and lon
         .then(function (response) {
             //convert to JSON
@@ -114,6 +112,7 @@ function removeAllChildren(elem){
     }
 }
 
+//display current days weather forecast
 function createTodaysWeather(cityValue, weatherObj) {
    //remove previous results
     removeAllChildren(cityDetailsEL);
@@ -129,6 +128,7 @@ function createTodaysWeather(cityValue, weatherObj) {
     //add image
     let imgValue = document.createElement("img");
     imgValue.setAttribute("src", iconurl);
+    imgValue.setAttribute("alt", "weather icon");
     cityDetailsEL.appendChild(imgValue);
     //add temp
     let temp = document.createElement("h3");
@@ -145,6 +145,7 @@ function createTodaysWeather(cityValue, weatherObj) {
 
 }
 
+//create card to display one day of 5 day weather forcast
 function createWeatherCard(weatherObj) { 
     //create 1 weather forecast
     
@@ -164,7 +165,8 @@ function createWeatherCard(weatherObj) {
     let iconcode = weatherObj.weather[0].icon;
     let iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
     imgValue.setAttribute("src", iconurl);
-
+    imgValue.setAttribute("alt", "weather icon");
+    //add temp, wind, humidity
     temp.appendChild(document.createTextNode("Temp: " + weatherObj.main.temp + " °C"));
     wind.appendChild(document.createTextNode("Wind: " + weatherObj.wind.speed + " MPH"));
     humidity.appendChild(document.createTextNode("Humidity: " + weatherObj.main.humidity + " %"));
@@ -242,9 +244,8 @@ function removeButton(cityValue) {
     let buttonSelector = `[data-city="${cityValue}"]`;
    
     $(buttonSelector).remove();
-    //console.log("the value=" + cityValue+ "=");
+    //chck if already saved to local storage
     if (inStorage(cityValue)){
-       // console.log("found in storage");
         let storedCities = JSON.parse(localStorage.getItem("cities"));
         //remove city from local storage using filter
         storedCities = storedCities.filter(function(item) {
@@ -255,7 +256,7 @@ function removeButton(cityValue) {
     }
     
 }
-//create buttons based on stored value
+//create buttons based on stored value from local storage
 function createAllButtons() {
     let storedCities = JSON.parse(localStorage.getItem("cities"));
     if (storedCities != null) {
@@ -291,7 +292,7 @@ function submitButtonHandler (event){
             saveNewCity(cityValue);
         }
         callAPI();
-       
+       //clear entered value
         $('#city-name').val("");
     } else {
         // no city added - tell user
