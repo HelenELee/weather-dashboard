@@ -57,29 +57,15 @@ function callAPI(cityValue){
 function displayWeather(cityValue, weatherList) {
     //set up dates
     //let startDay = dayjs().set('hour', 12).set('minute', 59).set('second', 59).unix();
-    
+    let count = 0; //keep track of how many forecasts have been printed
     let startDay = new Date();
-    startDay = dayjs(startDay).unix();
-   // console.log(startDay);
-    
-    console.log(startDay);
-
-    let tomorrowDay = dayjs().add(1, 'day').unix();
-    /*
-    let tomorrowDay = new Date();
-    tomorrowDay.setDate(startDay.getDate() + 1)
-    tomorrowDay = day.js(tomorrowDay).unix();
-    console.log(tomorrowDay);
-    */
-
-    let endDay = dayjs().add(6, 'day').unix();
-    /*
+    startDay.setHours(20,0,0,0); //set to 8pm as there are issues with current date early in the am
     let endDay = new Date();
-    endDay.setDate(startDay.getDay() + 6);
-    endDay = day.js(endDay).unix();
-    console.log(endDay);
-    */
-
+    endDay.setDate(startDay.getDay() + 6); //again set time to 8pm
+    endDay.setHours(20,0,0,0);
+    startDay = dayjs(startDay).unix();
+    tomorrowDay = dayjs().add(1, 'day').unix();
+   
     let displayedTodays = false;
     //remove previous values
     removeAllChildren(weatherContainerEL);
@@ -88,21 +74,30 @@ function displayWeather(cityValue, weatherList) {
     for (let i = 0; i < weatherList.length; i++) {        
         //console.log("Processing : "+ dayjs.unix(weatherList[i].dt).format('MMM D, YYYY, hh:mm:ss a') + " / " + weatherList[i].main.temp);
         //check values are in correct date range
+       
         if (weatherList[i].dt < tomorrowDay && !displayedTodays) {
             //found todays weather details so print
+            console.log("today = " + new Date(weatherList[i].dt * 1000).toISOString().slice(0, 19).replace('T', ' '));
             createTodaysWeather(cityValue, weatherList[i]);
             //set boolean to true so you dont print todays details again
             displayedTodays = true;
         }else if (weatherList[i].dt > startDay && weatherList[i].dt <= endDay) {
             //details within date range
             if (weatherList[i].dt_txt.slice(11, 13) == "09") {
+                console.log("printing this day = " + new Date(weatherList[i].dt * 1000).toISOString().slice(0, 19).replace('T', ' '));
+                count=count+1;
                 //return the same time slot value for each day
                 //create 5 weather forecasts
                 createWeatherCard(weatherList[i]);
             }
-        }
+        } 
         
       } 
+      //depending on time of day this app is used, weather for last day may not
+      //have a "9" timeslot i.e earlier timeslots. If so return the last timeslot.
+      if (count < 5){
+        createWeatherCard(weatherList[weatherList.length-1]);
+      }
 }
 
 //helper function to remove children elements
@@ -339,7 +334,7 @@ $(function () {
 
 
   createAllButtons();
-  localStorage.clear("cities"); 
+  //localStorage.clear("cities"); 
   //let startDay = new Date();
   //console.log(startDay);
 
